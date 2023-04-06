@@ -1,7 +1,10 @@
 plugins {
     kotlin("multiplatform")
     id("com.android.library")
+    id("app.cash.sqldelight")
 }
+
+val sqlDelightVersion = "2.0.0-alpha05"
 
 kotlin {
     android {
@@ -23,13 +26,21 @@ kotlin {
     }
 
     sourceSets {
-        val commonMain by getting
+        val commonMain by getting {
+            dependencies {
+
+            }
+        }
         val commonTest by getting {
             dependencies {
                 implementation(kotlin("test"))
             }
         }
-        val androidMain by getting
+        val androidMain by getting {
+            dependencies {
+                implementation("app.cash.sqldelight:android-driver:$sqlDelightVersion")
+            }
+        }
         val androidUnitTest by getting
         val iosX64Main by getting
         val iosArm64Main by getting
@@ -39,6 +50,10 @@ kotlin {
             iosX64Main.dependsOn(this)
             iosArm64Main.dependsOn(this)
             iosSimulatorArm64Main.dependsOn(this)
+
+            dependencies {
+                implementation("app.cash.sqldelight:native-driver:$sqlDelightVersion")
+            }
         }
         val iosX64Test by getting
         val iosArm64Test by getting
@@ -58,5 +73,13 @@ android {
     defaultConfig {
         minSdk = 24
         targetSdk = 33
+    }
+}
+
+sqldelight {
+    databases {
+        create("Database") {
+            packageName.set("de.hergt.kmm.notes")
+        }
     }
 }

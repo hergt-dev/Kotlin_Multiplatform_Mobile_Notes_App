@@ -1,0 +1,37 @@
+CREATE TABLE Notes(
+    mId INTEGER NOT NULL PRIMARY KEY,
+    mTitle TEXT DEFAULT NULL,
+    mText TEXT DEFAULT NULL,
+    mDate INTEGER DEFAULT NULL
+);
+
+getNotes:
+SELECT *
+FROM Notes;
+
+getNoteById:
+SELECT *
+FROM Notes
+WHERE mId = ?;
+
+setNoteByValues:
+INSERT OR IGNORE INTO Notes(mId, mTitle, mText, mDate)
+VALUES (?,?,?,?);
+
+setNoteByObject:
+INSERT OR IGNORE INTO Notes(mId, mTitle, mText, mDate)
+VALUES ?;
+
+updateNoteByValues:
+UPDATE Notes
+SET mTitle = :title,
+    mText = :text,
+    mDate = :date
+WHERE mId = :id;
+
+deleteNotes:
+DELETE FROM Notes;
+
+deleteNotesById:
+DELETE FROM Notes
+WHERE mId = :id;

@@ -5,6 +5,8 @@ plugins {
 }
 
 val sqlDelightVersion = "2.0.0-alpha05"
+val kotlinxCoroutinesVersion = "1.7.0-Beta"
+val kotlinxDatetimeVersion = "0.4.0"
 
 kotlin {
     android {
@@ -28,6 +30,8 @@ kotlin {
     sourceSets {
         val commonMain by getting {
             dependencies {
+                implementation("org.jetbrains.kotlinx:kotlinx-datetime:$kotlinxDatetimeVersion")
+
                 implementation("app.cash.sqldelight:coroutines-extensions:$sqlDelightVersion")
                 implementation("app.cash.sqldelight:primitive-adapters:$sqlDelightVersion")
             }

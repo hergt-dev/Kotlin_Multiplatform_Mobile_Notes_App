@@ -14,28 +14,20 @@ class NotesRepository(private val mQueries: NotesQueries) {
         return mQueries.getNotes().asFlow().mapToList(Dispatchers.Default)
     }
 
-    fun getNoteById(id: Int): Flow<Notes> {
-        return mQueries.getNoteById(id.toLong()).asFlow().mapToOneNotNull(Dispatchers.Default)
-    }
-
-    fun createNote(id: Int, title: String, text: String, date: Long) {
-        mQueries.setNoteByValues(id.toLong(), title, text, date)
+    fun getNoteById(id: Long): Flow<Notes> {
+        return mQueries.getNoteById(id).asFlow().mapToOneNotNull(Dispatchers.Default)
     }
 
     fun createNote(note: Notes) {
         mQueries.setNoteByObject(note)
     }
 
-    fun updateNote(id: Int, title: String? = null, text: String? = null, date: Long? = null) {
-        mQueries.updateNoteByValues(title, text, date, id.toLong())
+    fun updateNote(note: Notes) {
+        mQueries.updateNoteByValues(note.mTitle, note.mText, note.mDate, note.mId)
     }
 
-    fun deleteNotes() {
-        mQueries.deleteNotes()
-    }
-
-    fun deleteNoteById(id: Int) {
-        mQueries.deleteNotesById(id.toLong())
+    fun deleteNoteById(id: Long) {
+        mQueries.deleteNotesById(id)
     }
 
 }

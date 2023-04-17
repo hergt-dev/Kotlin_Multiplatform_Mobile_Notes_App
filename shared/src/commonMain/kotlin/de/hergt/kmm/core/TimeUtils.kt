@@ -28,11 +28,9 @@ class TimeUtils {
         return currentTimeInstant().toEpochMilliseconds()
     }
 
-    fun convertTimeMillisToDateString(timeMillis: Long?): String {
-        timeMillis?.let {
-            val date = timeMillisToLocalDateTime(timeMillis).date
-            return "${date.dayOfMonth.twoDigits()}.${date.monthNumber.twoDigits()}.${date.year}"
-        } ?: return ""
+    fun convertTimeMillisToDateString(timeMillis: Long): String {
+        val date = timeMillisToLocalDateTime(timeMillis).date
+        return "${date.dayOfMonth.twoDigits()}.${date.monthNumber.twoDigits()}.${date.year}"
     }
 
 }

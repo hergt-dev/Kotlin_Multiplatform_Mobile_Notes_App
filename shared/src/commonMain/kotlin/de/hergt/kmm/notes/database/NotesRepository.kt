@@ -10,18 +10,16 @@ import kotlinx.coroutines.flow.Flow
 
 class NotesRepository(private val mQueries: NotesQueries) {
 
-    fun getNotes(): CommonFlow<List<Notes>> {
+    fun getNotes(): Flow<List<Notes>> {
         return mQueries.getNotes()
             .asFlow()
             .mapToList(Dispatchers.Default)
-            .asCommonFlow()
     }
 
-    fun getNoteById(id: Long): CommonFlow<Notes> {
+    fun getNoteById(id: Long): Flow<Notes> {
         return mQueries.getNoteById(id)
             .asFlow()
             .mapToOneNotNull(Dispatchers.Default)
-            .asCommonFlow()
     }
 
     fun createNote(note: Notes) {

@@ -3,8 +3,7 @@ import shared
 
 struct ContentView: View {
 	var body: some View {
-		Text("iOS")
-		//Content will be implemented here
+		NotesView()
 	}
 }
 

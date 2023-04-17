@@ -14,30 +14,38 @@ class NotesViewModel: ObservableObject {
     @Published var mSelectedNote: Notes? = nil
     @Published var mNotes: [Notes] = []
     
+    var mSheetVisibility: Bool {
+        get {
+            return mSelectedNote != nil
+        }
+        set {  }
+    }
     
     private let mTimeUtils = TimeUtils()
     private let mNotesRepo = NotesRepository(mQueries: DatabaseFactory().mNotesQueries)
     
     
     func getAllNotes() {
-        
-        upsertNote(note: Notes(mId: UUID().integers.0, mTitle: "Test", mText: "Text...", mDate: mTimeUtils.currentTimeMillis()))
-        
-        mNotesRepo.getNotes().watch { notes in
-            guard let notes = notes as? Array<Notes> else { return }
-            self.mNotes = notes
+        mNotesRepo.getNotes().collect(collector: Collector<Array<Notes>>{ notes in
+            DispatchQueue.main.async {
+                self.mNotes = notes
+            }
+        }) { error in
+            print("FLOW ERROR getAllNotes(): \(String(describing: error?.localizedDescription))")
         }
     }
     
-    func upsertNote(note: Notes) {
-        if mNotes.first(where: { $0.mId == note.mId }) != nil {
+    func upsertNote() {
+        guard let note = mSelectedNote else { return }
+        if let _ = mNotes.first(where: { $0.mId == note.mId }) {
             mNotesRepo.updateNote(note: note)
         } else {
             mNotesRepo.createNote(note: note)
         }
     }
     
-    func deleteNoteById(id: Int64) {
+    func deleteNoteById() {
+        guard let id = mSelectedNote?.mId else { return }
         mNotesRepo.deleteNoteById(id: id)
     }
     
@@ -51,8 +59,7 @@ class NotesViewModel: ObservableObject {
     }
     
     func selectNote(id: Int64) {
-        getNoteById(id: id).watch { note in
-            guard let note = note else { return }
+        if let note = mNotes.first(where: { $0.mId == id }) {
             self.mSelectedNote = note
         }
     }
@@ -79,10 +86,6 @@ class NotesViewModel: ObservableObject {
             mText: value,
             mDate: selectedNote.mDate
         )
-    }
-    
-    private func getNoteById(id: Int64) -> CommonFlow<Notes> {
-        return mNotesRepo.getNoteById(id: id)
     }
     
 }
